@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace MenuSelection
 {
@@ -7,12 +8,48 @@ namespace MenuSelection
             public static void Main()
         {
             decimal money=0;
-            string menuSelection;
+            int menuSelection;
             bool hasEnteredMony = false;
-            int minPrice = 50;
+            decimal minPrice = 0;
             decimal itemPrice=0;
             string itemName="";
             bool itemValide= false;
+            List<string> productNames = new List<string>();
+            List<decimal> productPrice = new List<decimal>();
+            bool isEnteringProducts = true;
+            bool hasEnteredItemPrice = false;
+            
+
+
+            while (isEnteringProducts)
+            {
+                Console.Write("Enter product name (or blank to stop entering product): ");
+                itemName = Console.ReadLine();
+                if (itemName == "") isEnteringProducts = false;
+                else
+                {
+                    hasEnteredItemPrice = false;
+                    while (!hasEnteredItemPrice)
+                    {
+                        Console.Write("Enter" + itemName + "'s price: ");
+                        hasEnteredItemPrice = decimal.TryParse(Console.ReadLine(), out itemPrice);
+                        if (itemPrice <= 0)
+                        {
+                            hasEnteredItemPrice = false;
+                            Console.WriteLine(itemPrice + "Is not valid. Please enter a price larger than zero");
+                        }
+                    }
+
+                    if (itemPrice < minPrice)
+                    {
+                        minPrice = itemPrice;
+                    }
+
+                    productNames.Add(itemName);
+                    productPrice.Add(itemPrice);
+
+                }
+            }
 
             while (!hasEnteredMony)
             {
@@ -20,9 +57,9 @@ namespace MenuSelection
 
                 hasEnteredMony = decimal.TryParse(Console.ReadLine(),out money);
 
-                if(hasEnteredMony== false)
+                if(!hasEnteredMony)
                 {
-                    Console.WriteLine("Please enter valied amount");
+                    Console.WriteLine("Please enter valid amount");
                 }
                 else if (money < minPrice)
                 {
@@ -31,36 +68,51 @@ namespace MenuSelection
             }
 
            
-            while (money > minPrice )
+            while (money >= minPrice )
             {
-               
-                Console.WriteLine("1. Spinache for 200 frs");
-                Console.WriteLine("2. Kossam for 500 frs");
-                Console.WriteLine("3. Puff puff for 50 frs");
-                Console.Write("Please enter your selection: ");
-
-                menuSelection = Console.ReadLine();
-                itemValide = false;
                 Console.WriteLine("You have {0} frs", money);
-                if (menuSelection == "1")
+                for(int i=0; i<=productNames.Count-1;i++)
+                {
+                    Console.WriteLine("[" + (i + 1) + "]" + productNames[i] + "- frs" + productPrice[i]);
+                }
+
+                Console.Write(": ");
+
+                if(int.TryParse(Console.ReadLine(),out menuSelection))
+                {
+                    itemValide = false;
+                    if (menuSelection > 0)
                     {
-                    itemValide = true;
-                    itemName = "Spinache";
-                    itemPrice = 200;
-                      
+                        if (menuSelection <= productNames.Count)
+                        {
+                            itemPrice = productPrice[menuSelection - 1];
+                            itemName = productNames[menuSelection - 1];
+                            itemValide = true;
+                        }
                     }
-                    else if (menuSelection == "2")
-                    {
-                    itemValide = true;
-                    itemName = "Kossam";
-                    itemPrice = 500;
+
                 }
-                    else if (menuSelection == "3")
-                    {
-                    itemValide = true;
-                    itemName = "Puff puff";
-                    itemPrice = 50;
-                }
+               
+               
+                //if (menuSelection == "1")
+                //    {
+                //    itemValide = true;
+                //    itemName = "Spinache";
+                //    itemPrice = 200;
+                      
+                //    }
+                //    else if (menuSelection == "2")
+                //    {
+                //    itemValide = true;
+                //    itemName = "Kossam";
+                //    itemPrice = 500;
+                //}
+                //    else if (menuSelection == "3")
+                //    {
+                //    itemValide = true;
+                //    itemName = "Puff puff";
+                //    itemPrice = 50;
+                //}
                
 
                 if (itemValide)
@@ -72,7 +124,7 @@ namespace MenuSelection
                     else
                     {
                         money -= itemPrice;
-                        Console.WriteLine("You bought {0}, you are now left with {1} frs ",itemName, money);
+                        Console.WriteLine("You bought {0}, you are now left with {1} frs ", itemName, money);
                     }
                 }
 
