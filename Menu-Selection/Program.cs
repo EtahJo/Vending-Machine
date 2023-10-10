@@ -3,6 +3,27 @@ using System.Collections.Generic;
 
 namespace MenuSelection
 {
+    class Product
+    {
+        private string _name;
+        private decimal _price;
+
+        public Product(string name, decimal price)
+        {
+            _name = name;
+            _price = price;
+        }
+        public string Name
+        {
+            get { return _name; }
+            set { _name = value; }
+        }
+        public decimal Price
+        {
+            get { return _price; }
+            set { _price = value; }
+        }
+    }
     class Program
     {
             public static void Main()
@@ -14,8 +35,9 @@ namespace MenuSelection
             decimal itemPrice=0;
             string itemName="";
             bool itemValide= false;
-            List<string> productNames = new List<string>();
-            List<decimal> productPrice = new List<decimal>();
+            List<Product> products = new List<Product>();
+            //List<string> productNames = new List<string>();
+            //List<decimal> productPrice = new List<decimal>();
             bool isEnteringProducts = true;
             bool hasEnteredItemPrice = false;
             
@@ -45,8 +67,7 @@ namespace MenuSelection
                         minPrice = itemPrice;
                     }
 
-                    productNames.Add(itemName);
-                    productPrice.Add(itemPrice);
+                    products.Add(new Product(itemName,itemPrice));
 
                 }
             }
@@ -68,12 +89,12 @@ namespace MenuSelection
             }
 
            
-            while (money >= minPrice )
+            while (money > minPrice )
             {
                 Console.WriteLine("You have {0} frs", money);
-                for(int i=0; i<=productNames.Count-1;i++)
+                for(int i=0; i<=products.Count-1;i++)
                 {
-                    Console.WriteLine("[" + (i + 1) + "]" + productNames[i] + "- frs" + productPrice[i]);
+                    Console.WriteLine("[" + (i + 1) + "]" + products[i].Price + " frs - " + products[i].Name);
                 }
 
                 Console.Write(": ");
@@ -83,10 +104,10 @@ namespace MenuSelection
                     itemValide = false;
                     if (menuSelection > 0)
                     {
-                        if (menuSelection <= productNames.Count)
+                        if (menuSelection <= products.Count)
                         {
-                            itemPrice = productPrice[menuSelection - 1];
-                            itemName = productNames[menuSelection - 1];
+                            itemPrice = products[menuSelection - 1].Price;
+                            itemName = products[menuSelection - 1].Name;
                             itemValide = true;
                         }
                     }
